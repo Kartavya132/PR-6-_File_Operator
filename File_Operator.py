@@ -5,10 +5,21 @@ from datetime import datetime
 ENTRY_DATA = "PR-6-_File_Operator/data.txt"
 
 
-class entry:
+class Entry:
     def init(self):
-        self.entry = None
-        self.date = None
+        pass
+
+    def adding_entry():
+        print("Enter your diary entry below")
+        d_entry = input().strip
+        date = datetime.now()
+        try:
+            with open(ENTRY_DATA, "a") as f:
+                f.write(date + "\n")
+                f.write(d_entry + "\n")
+        except FileNotFoundError or PermissionError:
+            f = open(ENTRY_DATA, "w")   
+ 
 
 
 def load_data():
@@ -45,3 +56,17 @@ def show():
     print("3. Search for an Entry")
     print("4. Delete all the Entries")
     print("5. Exit")
+
+    choice = input("Enter the choice : ")
+
+    return choice
+
+def main():
+    load_data()
+    ch = show()
+    dataentry = Entry()
+
+    match ch:
+
+        case "1":
+
