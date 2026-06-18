@@ -1,139 +1,167 @@
 import os
-from sys import exit
 import datetime
+from sys import exit
 
 ENTRY_DATA = "data.txt"
+data = []
 
 
 class Entry:
-    def init(self):
+    def __init__(self):
         pass
 
     def adding_entry(self):
-        print("-------------------------")
-        print("Enter your diary entry below")
+        print("\n-------------------------")
+        print("Enter your diary entry below:")
         d_entry = input().strip()
-        dates = datetime.date.today()
-        data.append([dates, d_entry])
+
+        if not d_entry:
+            print("Entry cannot be empty!")
+            return
+
+        date_today = datetime.date.today()
+
+        data.append([str(date_today), d_entry])
+
         try:
             with open(ENTRY_DATA, "a") as f:
-                f.write(str(dates) + "\n")
-                f.write(str(d_entry) + "\n")
-            print("The Entry is Successfully Added")
-        except FileNotFoundError or PermissionError:
-            f = open(ENTRY_DATA, "w")
-            print("The Data is not perfectly added please try again later!!")
+                f.write(f"{date_today}\n")
+                f.write(f"{d_entry}\n")
+
+            print("The entry was successfully added.")
+
+        except PermissionError:
+            print("Unable to save the entry due to file permission issues.")
 
     def view_entry(self):
-        print("------------------------")
-        if data:
-            try:
-                for index, items in enumerate(data):
-                    print(f"{index}.\n  Date: {items[0]}\n  Entry: {items[1]}")
-            except IndexError:
-                print("Please delete all entry and rewrite it!")
-        else:
-            print("There is not a single entry!")
+        print("\n-------------------------")
+
+        if not data:
+            print("There are no diary entries.")
+            return
+
+        for index, item in enumerate(data, start=1):
+            print(f"{index}.")
+            print(f"   Date : {item[0]}")
+            print(f"   Entry: {item[1]}")
+            print()
 
     def check_entry(self):
-        print("----------------------")
-        flag = False
-        if data:
-            try:
-                print("Enter the diary entry to check below : ")
-                check = input().strip()
-                if len(check) < 3:
-                    print("Atleast enter three character!")
-                    return
-                for index, item in enumerate(data):
-                    if check in item[1]:
-                        print(f"{index+1}.\n  Date: {item[0]}\n  Entry: {item[1]}")
-                        flag = True
-                if not flag:
-                    print("There is no such thing!!")
-            except IndexError:
-                print("Retry this or delete all the entry!")
+        print("\n-------------------------")
+
+        if not data:
+            print("There are no diary entries.")
+            return
+
+        search_text = input("Enter text to search: ").strip()
+
+        if len(search_text) < 3:
+            print("Please enter at least 3 characters.")
+            return
+
+        found = False
+
+        for index, item in enumerate(data, start=1):
+            if search_text.lower() in item[1].lower():
+                print(f"\n{index}.")
+                print(f"   Date : {item[0]}")
+                print(f"   Entry: {item[1]}")
+                found = True
+
+        if not found:
+            print("No matching entry found.")
 
     def del_entry(self):
-        print("----------------------")
-        try:
-            if data:
-                data = []
-                with open(ENTRY_DATA, "w") as f:
+        global data
+
+        print("\n-------------------------")
+
+        if not data:
+            print("There are no entries to delete.")
+            return
+
+        confirm = input(
+            "Are you sure you want to delete all entries? (y/n): "
+        ).strip().lower()
+
+        if confirm == "y":
+            data.clear()
+
+            try:
+                with open(ENTRY_DATA, "w"):
                     pass
-                print("The data completely removed!")
-            else:
-                print("there no such data in this")
-        except:
-            print("Try again later")
+
+                print("All diary entries have been deleted.")
+
+            except PermissionError:
+                print("Unable to clear the file.")
+        else:
+            print("Deletion cancelled.")
 
 
 def load_data():
     global data
     data = []
-    temps = []
-    if os.path.exists(ENTRY_DATA):
-        try:
-            with open(ENTRY_DATA, "r") as f:
-                for line_num, line in enumerate(f, start):
-                    if line_num % 2 == 0 and line:
-                        temps.append(line.strip())
-                    elif line and line_num % 2 == 1:
-                        temps.append(line.strip())
-                        data.append(temps)
-                        temps = []
-        except PermissionError or FileNotFoundError:
-            f = open(ENTRY_DATA, "w")
-    else:
-        try:
-            f = open(ENTRY_DATA, "x")
-        except PermissionError or FileExistsError:
-            f = open(ENTRY_DATA, "w")
+
+    if not os.path.exists(ENTRY_DATA):
+        with open(ENTRY_DATA, "w"):
+            pass
+        return
+
+    try:
+        with open(ENTRY_DATA, "r") as f:
+            lines = [line.strip() for line in f.readlines()]
+
+        for i in range(0, len(lines), 2):
+            if i + 1 < len(lines):
+                date = lines[i]
+                entry = lines[i + 1]
+                data.append([date, entry])
+
+    except (PermissionError, FileNotFoundError):
+        print("Could not load diary data.")
 
 
 def show():
-    print("-----------------------------------")
+    print("\n-----------------------------------")
     print("| Welcome to Personal Diary Entry |")
-    print("-----------------------------------\n")
-
-    print("-------Entry Menu-------")
-    print("1. Add the new Entry")
-    print("2. View all Entry")
-    print("3. Search for an Entry")
-    print("4. Delete all the Entries")
+    print("-----------------------------------")
+    print("1. Add a new Entry")
+    print("2. View all Entries")
+    print("3. Search an Entry")
+    print("4. Delete all Entries")
     print("5. Exit")
 
-    choice = input("Enter the choice : ")
-
-    return choice
+    return input("Enter your choice: ").strip()
 
 
 def main():
     load_data()
-    dataentry = Entry()
+
+    diary = Entry()
+
     while True:
-        ch = show()
+        choice = show()
 
-        match ch:
-
+        match choice:
             case "1":
-                dataentry.adding_entry()
+                diary.adding_entry()
 
             case "2":
-                dataentry.view_entry()
+                diary.view_entry()
 
             case "3":
-                dataentry.check_entry()
+                diary.check_entry()
 
             case "4":
-                dataentry.del_entry()
+                diary.del_entry()
 
             case "5":
-                print("Thank you for this!")
+                print("Thank you for using Personal Diary.")
                 exit()
 
             case _:
-                print("Enter the valid choice")
+                print("Please enter a valid choice (1-5).")
 
 
 if __name__ == "__main__":
