@@ -25,15 +25,44 @@ class Entry:
             print("The Data is not perfectly added please try again later!!")
 
     def view_entry():
+        print("------------------------")
         if data:
             try:
                 for index, items in enumerate(data, start=1):
                     print(f"{index}.\n  {items[0]}\n  {items[1]}")
             except IndexError:
                 print("Please delete all entry and rewrite it!")
+        else:
+            print("There is not a single entry!")
 
     def check_entry():
-        pass
+        print("----------------------")
+        flag = False
+        if data:
+            try:
+                print("Enter the diary entry to check below : ")
+                check = input()
+                for index, item in enumerate(data, start=1):
+                    if check in item[1]:
+                        print(f"{index}.\n  {item[0]}\n  {item[1]}")
+                        flag = True
+                if not flag:
+                    print("There is no such thing!!")
+            except IndexError:
+                print("Retry this or delete all the entry!")
+
+    def del_entry():
+        print("----------------------")
+        try:
+            if data:
+                data = []
+                with open(ENTRY_DATA, "w") as f:
+                    pass
+                print("The data completely removed!")
+            else:
+                print("there no such data in this")
+        except:
+            print("Try again later")
 
 
 def load_data():
@@ -91,3 +120,10 @@ def main():
 
         case "3":
             dataentry.check_entry()
+
+        case "4":
+            dataentry.del_entry()
+
+        case "5":
+            print("Thank you for this!")
+            exit()
