@@ -1,6 +1,6 @@
 import os
 from sys import exit
-from datetime import date
+import datetime
 
 ENTRY_DATA = "data.txt"
 
@@ -13,11 +13,11 @@ class Entry:
         print("-------------------------")
         print("Enter your diary entry below")
         d_entry = input().strip()
-        date = date.now()
-        data.append([date, d_entry])
+        dates = datetime.date.today()
+        data.append([dates, d_entry])
         try:
             with open(ENTRY_DATA, "a") as f:
-                f.write(str(date) + "\n")
+                f.write(str(dates) + "\n")
                 f.write(str(d_entry) + "\n")
             print("The Entry is Successfully Added")
         except FileNotFoundError or PermissionError:
@@ -29,7 +29,7 @@ class Entry:
         if data:
             try:
                 for index, items in enumerate(data, start=1):
-                    print(f"{index}.\n  {items[0]}\n  {items[1]}")
+                    print(f"{index}.\n  Date: {items[0]}\n  Entry: {items[1]}")
             except IndexError:
                 print("Please delete all entry and rewrite it!")
         else:
@@ -44,7 +44,7 @@ class Entry:
                 check = input().strip()
                 for index, item in enumerate(data, start=1):
                     if check in item[1]:
-                        print(f"{index}.\n  {item[0]}\n  {item[1]}")
+                        print(f"{index}.\n  Date: {item[0]}\n  Entry: {item[1]}")
                         flag = True
                 if not flag:
                     print("There is no such thing!!")
@@ -73,10 +73,10 @@ def load_data():
         try:
             with open(ENTRY_DATA, "r") as f:
                 for line_num, line in enumerate(f, start=0):
-                    if line_num % 2 == 1 and line:
-                        temps.append(line)
+                    if line_num % 2 == 0 and line:
+                        temps = [line.strip()]
                     elif line and line_num % 2 == 1:
-                        temps.append(line)
+                        temps.append(line.strip())
                         data.append(temps)
                         temps = []
         except PermissionError or FileNotFoundError:
