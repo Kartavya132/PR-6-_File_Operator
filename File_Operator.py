@@ -28,7 +28,7 @@ class Entry:
         print("------------------------")
         if data:
             try:
-                for index, items in enumerate(data, start=1):
+                for index, items in enumerate(data):
                     print(f"{index}.\n  Date: {items[0]}\n  Entry: {items[1]}")
             except IndexError:
                 print("Please delete all entry and rewrite it!")
@@ -42,9 +42,12 @@ class Entry:
             try:
                 print("Enter the diary entry to check below : ")
                 check = input().strip()
-                for index, item in enumerate(data, start=1):
+                if len(check) < 3:
+                    print("Atleast enter three character!")
+                    return
+                for index, item in enumerate(data):
                     if check in item[1]:
-                        print(f"{index}.\n  Date: {item[0]}\n  Entry: {item[1]}")
+                        print(f"{index+1}.\n  Date: {item[0]}\n  Entry: {item[1]}")
                         flag = True
                 if not flag:
                     print("There is no such thing!!")
@@ -72,9 +75,9 @@ def load_data():
     if os.path.exists(ENTRY_DATA):
         try:
             with open(ENTRY_DATA, "r") as f:
-                for line_num, line in enumerate(f, start=0):
+                for line_num, line in enumerate(f, start):
                     if line_num % 2 == 0 and line:
-                        temps = [line.strip()]
+                        temps.append(line.strip())
                     elif line and line_num % 2 == 1:
                         temps.append(line.strip())
                         data.append(temps)
@@ -128,6 +131,9 @@ def main():
             case "5":
                 print("Thank you for this!")
                 exit()
+
+            case _:
+                print("Enter the valid choice")
 
 
 if __name__ == "__main__":
