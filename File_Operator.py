@@ -10,16 +10,30 @@ class Entry:
         pass
 
     def adding_entry():
+        print("-------------------------")
         print("Enter your diary entry below")
         d_entry = input().strip
         date = datetime.now()
+        data.append([date, d_entry])
         try:
             with open(ENTRY_DATA, "a") as f:
                 f.write(date + "\n")
                 f.write(d_entry + "\n")
+            print("The Entry is Successfully Added")
         except FileNotFoundError or PermissionError:
-            f = open(ENTRY_DATA, "w")   
- 
+            f = open(ENTRY_DATA, "w")
+            print("The Data is not perfectly added please try again later!!")
+
+    def view_entry():
+        if data:
+            try:
+                for index, items in enumerate(data, start=1):
+                    print(f"{index}.\n  {items[0]}\n  {items[1]}")
+            except IndexError:
+                print("Please delete all entry and rewrite it!")
+
+    def check_entry():
+        pass
 
 
 def load_data():
@@ -30,9 +44,9 @@ def load_data():
         try:
             with open(ENTRY_DATA, "r") as f:
                 for line_num, line in enumerate(f, start=1):
-                    if line_num % 2 == 1:
+                    if line_num % 2 == 1 and line:
                         temps.append(line)
-                    else:
+                    elif line and line_num % 2 == 1:
                         temps.append(line)
                         data.append(temps)
                         temps = []
@@ -61,6 +75,7 @@ def show():
 
     return choice
 
+
 def main():
     load_data()
     ch = show()
@@ -69,4 +84,10 @@ def main():
     match ch:
 
         case "1":
+            dataentry.adding_entry()
 
+        case "2":
+            dataentry.view_entry()
+
+        case "3":
+            dataentry.check_entry()
