@@ -300,17 +300,3 @@ After studying this project, learners can understand:
 
 ---
 
-# 🚀 Future Improvements
-
-Possible enhancements include:
-
-* 🔐 Password-protected diary
-* ✏️ Edit existing entries
-* 📅 Search by date
-* 🎨 Graphical User Interface (GUI)
-* ☁️ Cloud backup support
-* 📊 Entry statistics and analytics
-* 🌙 Dark mode interface
-* 📄 Export diary entries to PDF
-
----
