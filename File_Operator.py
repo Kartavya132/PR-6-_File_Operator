@@ -1,30 +1,30 @@
 import os
 from sys import exit
-from datetime import datetime
+from datetime import date
 
-ENTRY_DATA = "PR-6-_File_Operator/data.txt"
+ENTRY_DATA = "data.txt"
 
 
 class Entry:
     def init(self):
         pass
 
-    def adding_entry():
+    def adding_entry(self):
         print("-------------------------")
         print("Enter your diary entry below")
-        d_entry = input().strip
-        date = datetime.now()
+        d_entry = input().strip()
+        date = date.now()
         data.append([date, d_entry])
         try:
             with open(ENTRY_DATA, "a") as f:
-                f.write(date + "\n")
-                f.write(d_entry + "\n")
+                f.write(str(date) + "\n")
+                f.write(str(d_entry) + "\n")
             print("The Entry is Successfully Added")
         except FileNotFoundError or PermissionError:
             f = open(ENTRY_DATA, "w")
             print("The Data is not perfectly added please try again later!!")
 
-    def view_entry():
+    def view_entry(self):
         print("------------------------")
         if data:
             try:
@@ -35,13 +35,13 @@ class Entry:
         else:
             print("There is not a single entry!")
 
-    def check_entry():
+    def check_entry(self):
         print("----------------------")
         flag = False
         if data:
             try:
                 print("Enter the diary entry to check below : ")
-                check = input()
+                check = input().strip()
                 for index, item in enumerate(data, start=1):
                     if check in item[1]:
                         print(f"{index}.\n  {item[0]}\n  {item[1]}")
@@ -51,7 +51,7 @@ class Entry:
             except IndexError:
                 print("Retry this or delete all the entry!")
 
-    def del_entry():
+    def del_entry(self):
         print("----------------------")
         try:
             if data:
@@ -72,7 +72,7 @@ def load_data():
     if os.path.exists(ENTRY_DATA):
         try:
             with open(ENTRY_DATA, "r") as f:
-                for line_num, line in enumerate(f, start=1):
+                for line_num, line in enumerate(f, start=0):
                     if line_num % 2 == 1 and line:
                         temps.append(line)
                     elif line and line_num % 2 == 1:
@@ -107,23 +107,28 @@ def show():
 
 def main():
     load_data()
-    ch = show()
     dataentry = Entry()
+    while True:
+        ch = show()
 
-    match ch:
+        match ch:
 
-        case "1":
-            dataentry.adding_entry()
+            case "1":
+                dataentry.adding_entry()
 
-        case "2":
-            dataentry.view_entry()
+            case "2":
+                dataentry.view_entry()
 
-        case "3":
-            dataentry.check_entry()
+            case "3":
+                dataentry.check_entry()
 
-        case "4":
-            dataentry.del_entry()
+            case "4":
+                dataentry.del_entry()
 
-        case "5":
-            print("Thank you for this!")
-            exit()
+            case "5":
+                print("Thank you for this!")
+                exit()
+
+
+if __name__ == "__main__":
+    main()
