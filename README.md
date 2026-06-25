@@ -35,17 +35,6 @@ This project demonstrates the use of:
 * ⚠️ Basic Exception Handling
 * 📅 Date Management
 
----
-
-# 📁 Project Structure
-
-```text
-Personal-Diary/
-│
-├── diary.py        # Main Python program
-├── data.txt        # Stores diary entries
-└── README.md       # Project documentation
-```
 
 ---
 
